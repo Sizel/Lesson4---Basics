@@ -58,8 +58,11 @@ namespace Basics
             Console.WriteLine($"The color of new green apple: { redApple.Color }");
             #endregion
             Console.WriteLine();
-            #region Use of boxing
-            
+            #region Use of boxing and unboxing
+            AppleWithPrice appleWithIntPrice = new AppleWithPrice(20, Color.Green, 30);
+            AppleWithPrice appleWithFloatPrice = new AppleWithPrice(10, Color.Red, 20.5);
+            int intPrice = (int)appleWithIntPrice.Price;
+            float floatPrice = (float)appleWithFloatPrice.Price;
             #endregion
 
         }
@@ -113,9 +116,30 @@ namespace Basics
         }
     }
 
+    class AppleWithPrice : Apple
+    {
+        public Object Price { get; set; }
+        public AppleWithPrice(int weight, Color color, Object price) : base(weight, color)
+        {
+            Price = price;
+        }
+    }
+
     enum Color
     {
         Red,
         Green
+    }
+
+    class StaticConstructorExemple
+    {
+        static string firstPart = "http://www.example.com/";
+        static string fullUrl;
+        static string urlFragment = "foo/bar";
+
+        static StaticConstructorExemple()
+        {
+            fullUrl = firstPart + urlFragment;
+        }
     }
 }
