@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 
 namespace Basics
 {
@@ -60,13 +61,52 @@ namespace Basics
             Console.WriteLine();
             #region Use of boxing and unboxing
             AppleWithPrice appleWithIntPrice = new AppleWithPrice(20, Color.Green, 30);
-            AppleWithPrice appleWithFloatPrice = new AppleWithPrice(10, Color.Red, 20.5);
+            AppleWithPrice appleWithFloatPrice = new AppleWithPrice(10, Color.Red, 20.5f);
             int intPrice = (int)appleWithIntPrice.Price;
             float floatPrice = (float)appleWithFloatPrice.Price;
             #endregion
+            #region Use of static constructor
+            Console.WriteLine("====== Use of static constructor ========");
+            StaticConstructorExample staticConstructorExample = new StaticConstructorExample();
+            StaticConstructorExample staticConstructorExample1 = new StaticConstructorExample();
+            #endregion
+            #region Threads
+            Console.WriteLine("========= Use of threads ==========");
+            Thread newThread = new Thread(new ThreadStart(RunMeInNewThread));      
+            newThread.Start();
+            for (int i = 0; i < 5; i++)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("*");
+                Console.WriteLine(" *");
+                Console.WriteLine("  *");
+                Console.WriteLine("   *");
+                Console.WriteLine("    *");
+                Thread.Sleep(400);
+            }
+            
+            #endregion
 
         }
+
+        static void RunMeInNewThread()
+        {
+            for (int i = 0; i < 5; i++)
+            {
+                Thread.Sleep(75);
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("    *");
+                Console.WriteLine("   *");
+                Console.WriteLine("  *");
+                Console.WriteLine(" *");
+                Console.WriteLine("*");
+                Thread.Sleep(400);
+            }
+            
+        }
     }
+
+
 
     class Apple
     {
@@ -131,15 +171,51 @@ namespace Basics
         Green
     }
 
-    class StaticConstructorExemple
+    class StaticConstructorExample
     {
         static string firstPart = "http://www.example.com/";
         static string fullUrl;
         static string urlFragment = "foo/bar";
 
-        static StaticConstructorExemple()
+        static StaticConstructorExample()
         {
             fullUrl = firstPart + urlFragment;
+            Console.WriteLine("I am the static constructor and I am called only once");
+            Console.WriteLine(fullUrl);
+        }
+
+        public int CountWord(string word) { return 10; }
+        public void OpenPage() 
+        {
+            // open full url
+        }
+    }
+
+    class Integral
+    {
+        public delegate float F(float x);
+        private F f;
+        public float LeftBorder { get; set; }
+        public float RightBorder { get; set; }
+        public int N { get; set; }
+        public Integral(F del, float leftBorder, float rightBorder, int n)
+        {
+            f = del;
+            LeftBorder = leftBorder;
+            RightBorder = rightBorder;
+            N = n;
+        }
+        public float CalculateIntegral()
+        {
+            float step = (RightBorder - LeftBorder) / N;
+            float result = 0;
+            float threadResult = 0;
+            for (int i = 0; i < N; i++)
+            {
+                result += f(LeftBorder + step * (i + 0.5f));
+            }
+            result *= step;
+            return result;
         }
     }
 }
